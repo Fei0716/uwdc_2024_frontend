@@ -1,0 +1,116 @@
+@import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Righteous&display=swap');
+
+:root{
+    --primary-color: #0F2745;
+    --secondary-color: #0C1F37;
+    --contrast-color: #9D102E;
+
+    --neutral-color-1: #CFD4DA;
+    --neutral-color-2: #9FA8B3;
+    --neutral-color-3: #6F7D8F;
+    --neutral-color-4: #3F526A;
+
+}
+body{
+    position: relative;
+    background-image: url("/bg.jpg") !important;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}
+body::after{
+    z-index: -1;
+    content: "";
+    top: 0;
+    left: 0;
+    height: 100dvh;
+    width: 100%;
+    background-color: rgba(15, 39, 69, 0.95);
+    position: fixed;
+}
+
+h1,h2,h3,h4,h5,h6{
+    font-family: 'Righteous', cursive;
+    color: white;
+}
+h1{
+  font-size: 36px;
+}
+h2{
+    font-size: 24px;
+}
+h3{
+    font-size: 18px;
+}
+div, p, a, span, input, button, label ,input{
+    font-family: 'Open Sans', sans-serif;
+    color: white;
+}
+.text-lg-bold{
+  font-weight: bold;
+    font-size: 20px;
+    color: var(--neutral-color-1);
+}
+.text-lg-regular{
+    font-size: 20px;
+    color: var(--neutral-color-1);
+}
+.text-normal-bold{
+    font-weight: bold;
+    font-size: 16px;
+    color: var(--neutral-color-1);
+}
+.text-normal-regular{
+    font-size: 16px;
+    color: var(--neutral-color-1);
+}
+.text-add-bold{
+    font-weight: bold;
+    font-size: 12px;
+    color: var(--neutral-color-2);
+}
+.text-add-regular{
+    font-size: 12px;
+    color: var(--neutral-color-2);
+}
+button{
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+}
+.btn-primary{
+    padding: 14px 13px;
+    height: 53px;
+    background: #9D102E;
+    border-radius:5px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
+    font-size: 18px;
+}
+.btn-primary:hover{
+    background: #650A1E;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.45);
+}
+.btn-secondary{
+    padding: 14px 13px;
+    height: 47px;
+    background: #0F2745;
+    border-radius:5px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
+    font-size: 14px;
+}
+.btn-secondary:hover{
+    background: #0C1F37;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
+}
+a{
+    text-decoration: none;
+}
+a.text-lg-bold, a.text-normal-bold:hover{
+    color: #ffffff;
+    text-decoration: underline;
+}
+a.text-add-bold:hover{
+    color: var(--neutral-color-1);
+    text-decoration: underline;
+}

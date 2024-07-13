@@ -4,8 +4,8 @@ import {reactive,watch} from 'vue';
 const useAuthStore = defineStore('auth' , ()=>{
   /*state*/
   const user = reactive({
-    name: null,
-    token: null,
+    name: '',
+    id: 0,
   });
   // initial value ....
   if(localStorage.getItem('user')){
@@ -18,12 +18,12 @@ const useAuthStore = defineStore('auth' , ()=>{
   });
   /*actions*/
   const removeAuth = () =>{
-    user.name = null;
-    user.token = null;
+    user.name = '';
+    user.id = 0;
   }
   /*getters(like computed)*/
   const isAuth = () => {
-    return user.token !== null && user.name !== null;
+    return user.name !== null && user.id !== null;
   }
 
   return {
