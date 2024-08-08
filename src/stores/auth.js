@@ -7,6 +7,7 @@ const useAuthStore = defineStore('auth' , ()=>{
     name: '',
     id: 0,
   });
+
   // initial value ....
   if(localStorage.getItem('user')){
     Object.assign(user, JSON.parse(localStorage.getItem('user')));

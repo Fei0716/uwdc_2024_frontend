@@ -29,7 +29,7 @@ const router = createRouter({
     },
     {
       path: '/:catchAll(.*)',
-      redirectTo:  '/',
+      redirect:  '/',
     }
   ]
 })

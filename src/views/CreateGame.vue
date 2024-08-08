@@ -3,6 +3,7 @@ import api from '@/api';
 import {reactive,ref,computed} from 'vue';
 import {useRouter} from 'vue-router'
 import useGameStore  from '@/stores/game.js'
+import Notification from '@/components/Notification.vue'
 
 
 // states
@@ -19,6 +20,7 @@ const fullGameLink = computed(()=>{
 });
 const link = ref(null);
 const router = useRouter();
+const notification = ref('');
 
  // methods
  async function createNewGame(){
@@ -46,6 +48,10 @@ const router = useRouter();
     }
  }
  function copyLink(){
+   notification.value = 'Link for the game has been copied, share it to the world now!';
+   setTimeout(()=>{
+     notification.value = '';
+   },5000);
    navigator.clipboard.writeText(fullGameLink.value);
  }
 </script>
@@ -101,6 +107,11 @@ const router = useRouter();
       </div>
     </section>
   </Transition>
+
+  <!--  notification component-->
+  <Notification :notification="notification">
+    {{notification}}
+  </Notification>
 </template>
 
 <style scoped>

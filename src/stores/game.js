@@ -1,7 +1,7 @@
 import {defineStore} from 'pinia';
 import {reactive,watch} from 'vue';
 
-const useGameStore = defineStore('auth' , ()=>{
+const useGameStore = defineStore('game' , ()=>{
   /*state*/
   const game = reactive({
     id: null,

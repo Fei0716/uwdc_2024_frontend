@@ -2,7 +2,9 @@
 import {useRoute,useRouter} from 'vue-router';
 import api from '@/api';
 import { ref, reactive, onMounted, watch, onUnmounted } from 'vue'
-import useAuthStore  from '@/stores/auth.js'
+import useAuthStore from '@/stores/auth.js'
+import Notification from '@/components/Notification.vue'
+//import components
 // states
 const route = useRoute();
 const router = useRouter();
@@ -11,18 +13,27 @@ const currentUser = reactive({
   nickname: ''
 });
 const users = reactive([]);
-// const authStore = useAuthStore();
+const authStore = useAuthStore();
+const notification = ref('');
+//instant response flags
+let gameInstantResponse = '?instantResponse=true';
+let playersInstantResponse = '?instantResponse=true';
+
 // methods
 
 // get the game details
 async function getGame(){
   try{
-    const {data} = await api.get(`/games/${route.params.link}`);
+    const {data} = await api.get(`/games/${route.params.link}${gameInstantResponse}`);
     Object.assign(game, data);
+    //remove the instant response flag
+    gameInstantResponse = '';
     //if game has started
     if(game.has_started){
       router.push({name:'Game', params:{link: route.params.link}});
+      return;
     }
+    await getGame();
   }catch(e){
     console.error(e);
   }
@@ -38,6 +49,10 @@ async function setNickname(){
     // authStore.user.name = data.nickname;
     Object.assign(currentUser, data);
     currentUser.nickname = data.nickname;
+
+    authStore.user.name = data.nickname;
+    authStore.user.id = data.id;
+
     localStorage.setItem('user', JSON.stringify({
       name: data.nickname,
       id: data.id
@@ -51,9 +66,15 @@ async function setNickname(){
 }
 async function getPlayers(){
   try{
-    const {data} = await api.get(`/games/${route.params.link}/players`);
+    const {data} = await api.get(`/games/${route.params.link}/players${playersInstantResponse}`);
     users.splice(0, users.length);
     users.push(...data);
+    playersInstantResponse = '';
+    //check whether the game is
+    if(game.has_started){
+      return;
+    }
+    await getPlayers();//long polling here
   }catch(e){
 
     console.error(e);
@@ -70,22 +91,22 @@ async function startGame(){
   }
 }
 function copyLink(){
+  notification.value = 'Link for the game has been copied, share it to the world now!';
+  setTimeout(()=>{
+    notification.value = '';
+  },5000);
   navigator.clipboard.writeText(window.location.href);
 }
-// methods call
-let interval = setInterval(()=>{
-  //pooling
-  getPlayers();
-  getGame();
-},4000);
+getGame();
+getPlayers();
 // lifecycle hooks
 onMounted(()=>{
+  // eslint-disable-next-line no-undef
   $('#modal-nickname').modal('show');
 });
 
 onUnmounted(()=>{
   $('#modal-nickname').modal('hide');
-  clearInterval(interval);
 });
 </script>
 
@@ -108,20 +129,26 @@ onUnmounted(()=>{
 
   <section aria-label="Game Lobby Section" class="container pt-4">
       <div id="game-settings" class="mb-5 d-flex justify-content-end gap-3 align-items-center">
-        <div class="text-lg-regular"><span class="text-lg-bold">{{game.playersJoined}}</span> Players</div>
+        <div class="text-lg-regular"><span class="text-lg-bold">{{game.player_count}}</span> Players</div>
         <div class="text-lg-regular"><span class="text-lg-bold">{{game.round_count}}</span> Rounds</div>
         <div class="text-lg-regular"><span class="text-lg-bold text-capitalize">{{game.privacy}}</span></div>
         <div class="text-lg-regular"><span class="text-lg-bold text-capitalize">{{game.mode}}</span></div>
         <button class="btn-primary" @click="copyLink">Share Link</button>
       </div>
+    <h1 class="text-center mb-2">{{users.length}} Players Joined</h1>
+
       <div class="players mb-3">
          <div v-for="u of users" :key="u.id" class="player text-lg-bold">
             {{u.nickname}}
          </div>
       </div>
 <!--       -->
-       <button class="btn-primary mx-auto d-block" :class="{'disabled': game.playersJoined < game.player_count}" @click="startGame" >Start Game</button>
+       <button class="btn-primary mx-auto d-block" :class="{'disabled': users.length < game.player_count}" @click="startGame" >Start Game</button>
   </section>
+  <!--  notification component-->
+  <Notification :notification="notification">
+    {{notification}}
+  </Notification>
 </template>
 
 <style scoped>
